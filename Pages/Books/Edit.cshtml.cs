@@ -1,7 +1,8 @@
+using Bejan_Serban_Lab2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Bejan_Serban_Lab2.Models;
 
 namespace Bejan_Serban_Lab2.Pages.Books;
 
@@ -30,6 +31,7 @@ public class EditModel : PageModel
             return NotFound();
         }
         Book = book;
+        ViewData["PublisherID"] = new SelectList(_context.Set<Publisher>(), "PublisherName");
         return Page();
     }
 
