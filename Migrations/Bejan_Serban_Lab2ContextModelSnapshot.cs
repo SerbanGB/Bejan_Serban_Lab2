@@ -166,6 +166,11 @@ namespace Bejan_Serban_Lab2.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Bejan_Serban_Lab2.Models.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
             modelBuilder.Entity("Bejan_Serban_Lab2.Models.Book", b =>
                 {
                     b.Navigation("BookCategories");

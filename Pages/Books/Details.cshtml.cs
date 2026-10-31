@@ -37,3 +37,6 @@ namespace Bejan_Serban_Lab2.Pages.Books
 
             Book = book;
             return Page();
+        }
+    }
+}

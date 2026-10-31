@@ -1,42 +1,57 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Bejan_Serban_Lab2.Models;
+@page "/"
+@model Bejan_Serban_Lab2.Pages.Books.IndexModel
 
-namespace Bejan_Serban_Lab2.Pages.Books
-{
-    public class IndexModel : PageModel
-    {
-        private readonly Bejan_Serban_Lab2Context _context;
-
-        public IndexModel(Bejan_Serban_Lab2Context context)
-        {
-            _context = context;
-        }
-
-        public BookData BookD { get; set; } = default!;
-        public int BookID { get; set; }
-        public int CategoryID { get; set; }
-
-        public async Task OnGetAsync(int? id, int? categoryID)
-        {
-            BookD = new BookData();
-
-            BookD.Books = await _context.Book
-                .Include(b => b.Publisher)
-                .Include(b => b.Author)
-                .Include(b => b.BookCategories)
-                .ThenInclude(b => b.Category)
-                .AsNoTracking()
-                .OrderBy(b => b.Title)
-                .ToListAsync();
-
-            if (id != null)
-            {
-                BookID = id.Value;
-                Book book = BookD.Books
-                    .Where(i => i.ID == id.Value).Single();
-                BookD.Categories = book.BookCategories.Select(s => s.Category);
-            }
-        }
-    }
+@{
+    ViewData["Title"] = "Books";
 }
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Publishing Date</th>
+            <th>Publisher</th>
+            <th>Categories</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BookD.Books)
+        {
+            string selectedRow = "";
+            if (item.ID == Model.BookID)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                <td>@item.Author?.FullName</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.PublishingDate)</td>
+                <td>@item.Publisher?.PublisherName</td>
+                <td>
+                    @if (item.BookCategories != null)
+                    {
+                        foreach (var category in item.BookCategories)
+                        {
+                            <div>@category.Category.ID @category.Category.CategoryName</div>
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
