@@ -24,6 +24,7 @@ namespace Bejan_Serban_Lab2.Pages.Books
             }
 
             var book = await _context.Book
+                .Include(b => b.Author)
                 .Include(b => b.Publisher)
                 .Include(b => b.BookCategories)
                 .ThenInclude(bc => bc.Category)
@@ -36,6 +37,3 @@ namespace Bejan_Serban_Lab2.Pages.Books
 
             Book = book;
             return Page();
-        }
-    }
-}

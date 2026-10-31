@@ -1,6 +1,6 @@
-using Bejan_Serban_Lab2.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Bejan_Serban_Lab2.Models;
 
 namespace Bejan_Serban_Lab2.Pages.Books
 {
@@ -13,8 +13,7 @@ namespace Bejan_Serban_Lab2.Pages.Books
             _context = context;
         }
 
-        public IList<Book> Book { get; set; } = default!;
-        public BookData BookD { get; set; }
+        public BookData BookD { get; set; } = default!;
         public int BookID { get; set; }
         public int CategoryID { get; set; }
 
@@ -24,6 +23,7 @@ namespace Bejan_Serban_Lab2.Pages.Books
 
             BookD.Books = await _context.Book
                 .Include(b => b.Publisher)
+                .Include(b => b.Author)
                 .Include(b => b.BookCategories)
                 .ThenInclude(b => b.Category)
                 .AsNoTracking()
